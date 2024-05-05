@@ -1,0 +1,12 @@
+{
+  "name": "samplenetclient",
+  "version": "1.0.0",
+  "displayName": "samplenetclient",
+  "description": "samplenetclient",
+  "unity" : "2021.3",
+  "author": {
+    "name": "Paata Baliashvili",
+    "email": "pl.baliashvili@gmail.com",
+    "url": ""
+  }
+}

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
+using SampleNetClient.Runtime.Messages;
 
 namespace SampleNetClient.Runtime
 {
@@ -19,6 +20,7 @@ namespace SampleNetClient.Runtime
         
         public NetClient Client { get; private set; }
         public event Action<EConnectionResult, string> ConnResultReceived;
+        public event Action<ECustomMessageType, ArraySegment<byte>> OnCustomMessageReceived;
 
         public void Connect(IPEndPoint remoteEndpoint, string payload = "")
         {
@@ -94,7 +96,7 @@ namespace SampleNetClient.Runtime
         private void HandleIncomeMsg(byte[] data)
         {
             var msgType = MessageHelper.ReadMessageType(data);
-
+            var byteReader = new SegmentByteReader(data, 2);
             switch (msgType)
             {
                 case ENetworkMessageType.ClientDisconnected:
@@ -114,6 +116,24 @@ namespace SampleNetClient.Runtime
                     break;
                 case ENetworkMessageType.Sync:
                     break;
+                case ENetworkMessageType.ConnectionRequest:
+                    break;
+                case ENetworkMessageType.ClientReady:
+                    break;
+                case ENetworkMessageType.ClientAliveCheck:
+                    break;
+                case ENetworkMessageType.Custom:
+                {
+                    var type = (ECustomMessageType)byteReader.ReadUshort();
+                    var payloadSize = byteReader.ReadInt32();
+                    var payload = byteReader.ReadBytes(payloadSize);
+                
+                    OnCustomMessageReceived?.Invoke(type, payload);
+                }
+                    break;
+                case ENetworkMessageType.None:
+                    break;
+          
             }
         }
 

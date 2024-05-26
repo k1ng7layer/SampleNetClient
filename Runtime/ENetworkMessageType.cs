@@ -13,6 +13,7 @@
         ServerAliveCheck,
         Ping,
         Sync,
+        Custom,
         None
     }
 }
